@@ -1,0 +1,1 @@
+# This APP is copy of Telegram Messenger
