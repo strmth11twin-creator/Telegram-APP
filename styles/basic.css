@@ -1,0 +1,39 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    user-select: none;
+    font-family: Roboto, sans-serif;
+    margin: 0;
+    background-color: var(--main-bg-color);
+    position: relative;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+.navigation {
+    transition: transform 1s ease-in-out;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
