@@ -26,6 +26,12 @@ body {
     flex-direction: column;
 }
 
+.remove-btn {
+    background-color: unset;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
 
 p {
     padding: 0;
