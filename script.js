@@ -12,6 +12,9 @@ const sectionsList = document.querySelectorAll(".navigation_list--items");
 const sectionsNavigation = document.querySelector("[data-sections-navigation]");
 const input = document.querySelector("[data-input]");
 const telegramBtn = document.querySelector("[data-telegram-btn]");
+const containerMessages = document.querySelector("[data-container-messages]");
+const file = document.querySelector("[data-file]");
+const fileInput = document.querySelector("[data-file-input]")
 
 let chatList = [
     {
@@ -32,9 +35,62 @@ let chatList = [
     }
 ]
 
+let messages = JSON.parse(localStorage.getItem("messages")) || {};
 let searchList = [];
 let filteredList = [];
 let current = "all";
+let currentChatId = null;
+
+function saveToLocalStorage(messagesList) {
+    localStorage.setItem("messages", JSON.stringify(messagesList))
+}
+
+file.addEventListener("click", (e) => {
+    fileInput.click()
+})
+
+fileInput.addEventListener("change", (e) => {
+    const files = fileInput.files[0];
+
+    if(!messages[currentChatId]) {
+        messages[currentChatId] = [];
+    }
+
+    messages[currentChatId].push(files.name);
+
+    fileInput.value = "";
+
+    saveToLocalStorage(messages);
+    renderMessages();
+})
+
+telegramBtn.addEventListener("click", () => {
+    if (input.value.trim()) {
+
+        if(!messages[currentChatId]) {
+            messages[currentChatId] = [];
+        }
+
+        messages[currentChatId].push(input.value);
+
+        input.value = "";
+
+        if (input.value.trim()) {
+            telegramBtn.innerHTML = `<svg class="icons"><use href="icon.svg"></use></svg>`
+        } else {
+            telegramBtn.innerHTML = `<svg class="icons"><use href="icon-icons (5).svg"></use></svg>`
+        }
+
+        saveToLocalStorage(messages);
+        renderMessages();
+    }
+})
+
+input.addEventListener("keydown", (e) => {
+    if(e.key === "Enter") {
+        telegramBtn.click();
+    }
+})
 
 input.addEventListener("input", (e) => {
     if (e.target.value.trim()) {
@@ -85,17 +141,21 @@ containerChats.addEventListener("click", (e) => {
     const chatEl = e.target.closest(".container_chats--chat");
     if (!chatEl) return;
 
-    const chat = chatList.find(c => c.id === +chatEl.dataset.id)
+    const chat = chatList.find(c => c.id === +chatEl.dataset.id);
     sectionsList.forEach(v => v.classList.remove("active"));
+    currentChatId = chat.id;
 
     chatEl.classList.add("active");
 
     name.textContent = chat.name;
 
+    containerMessages.classList.add("container-messages-visible")
     header.classList.add("header-visible");
     footer.classList.add("footer-visible");
     sidebar.classList.add("sidebar-hidden");
     navigation.classList.add("navigation-visible");
+
+    renderMessages();
 })
 
 function renderedFilter() {
@@ -172,4 +232,19 @@ function render() {
     })
 }
 
+function renderMessages() {
+    containerMessages.innerHTML = "";
+
+    const chatMessages = messages[currentChatId] || [];
+
+    chatMessages.forEach(message => {
+        const messageElement = document.createElement("span");
+        messageElement.textContent = message;
+        messageElement.classList.add("message-text");
+
+        containerMessages.append(messageElement);
+    })
+}
+
 render();
+renderMessages();

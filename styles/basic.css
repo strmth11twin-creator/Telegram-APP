@@ -3,7 +3,6 @@
 }
 
 body {
-    user-select: none;
     font-family: Roboto, sans-serif;
     margin: 0;
     background-color: var(--main-bg-color);
@@ -47,4 +46,34 @@ ul {
 p, h1, h2, h3, h4, h5, h6 {
     padding: 0;
     margin: 0;
+}
+
+.container-messages {
+    height: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: end;
+    padding: 10px;
+    flex-direction: column;
+    gap: 3px;
+    display: none;
+}
+
+.container-messages-visible {
+    display: block;
+    height: 100%;
+        display: flex;
+        align-items: start;
+        justify-content: end;
+        padding: 10px;
+        flex-direction: column;
+        gap: 3px;
+}
+
+.message-text {
+    padding: 10px 15px 10px 15px;
+    background-color: var(--active-bg);
+    border-radius: 20px;
+    font-size: 14px;
+    color: #fff;
 }
