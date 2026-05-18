@@ -13,22 +13,28 @@
 <body>
     <div class="container">
         <aside class="sidebar" data-sidebar>
-            <div class="container-create">
-                <input type="text" class="create-input" data-create-input placeholder="Добавить Чат">
-                <button class="create-btn" data-create-btn>Добавить</button>
+            <div class="container-sections">
+                <nav class="container_sections--navigation">
+                    <ul class="sections_navigation--list" data-sections-navigation>
+                        <li class="navigation_list--items" data-filter="all">Чаты</li>
+                        <li class="navigation_list--items" data-filter="channel">Каналы</li>
+                        <li class="navigation_list--items" data-filter="bot">Боты</li>
+                    </ul>
+                </nav>
             </div>
 
             <div class="container-search">
                 <input type="text" class="search-input" data-search-input placeholder="Поиск">
             </div>
 
-            <div class="container-chats" data-container-chats></div>
+            <div class="container-chats" data-container-chats>
+            </div>
         </aside>
 
         <div class="navigation" data-navigation>
             <header class="header" data-header>
                 <div class="header_content">
-                    <svg class=" header_btn" data-header-btn>
+                    <svg class="header_btn" data-header-btn>
                         <use href="arrow_arrows_back_direction_left_navigation_right_icon_123237.svg"></use>
                     </svg>
 
@@ -66,7 +72,7 @@
                                 </svg>
                             </li>
 
-                            <input type="text" class="footer_list--input" placeholder="Сообщение...">
+                            <input type="text" class="footer_list--input" placeholder="Сообщение..." data-input>
 
                             <li class="footer_list--item">
                                 <svg class="icons">

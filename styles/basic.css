@@ -16,7 +16,6 @@ body {
     min-height: 100vh;
 }
 
-
 .navigation {
     transition: transform 1s ease-in-out;
     width: 100%;
@@ -25,6 +24,7 @@ body {
     min-height: 100vh;
     flex-direction: column;
 }
+
 
 .remove-btn {
     background-color: unset;
@@ -40,6 +40,11 @@ p {
 
 ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
     padding: 0;
     margin: 0;
 }

@@ -1,7 +1,6 @@
 const searchInput = document.querySelector("[data-search-input]");
 const containerChats = document.querySelector("[data-container-chats]");
 const createBtn = document.querySelector("[data-create-btn]");
-const createInput = document.querySelector("[data-create-input]");
 const name = document.querySelector("[data-name]");
 const header = document.querySelector("[data-header]");
 const footer = document.querySelector("[data-footer]");
@@ -9,31 +8,32 @@ const sidebar = document.querySelector("[data-sidebar]");
 const navigation = document.querySelector("[data-navigation]");
 const headerBtn = document.querySelector("[data-header-btn]");
 const removeBtn = document.querySelector("[data-remove-btn]");
+const sectionsList = document.querySelectorAll(".navigation_list--items"); 
+const sectionsNavigation = document.querySelector("[data-sections-navigation]");
+const input = document.querySelector("[data-input]");
 
-let chatsList = JSON.parse(localStorage.getItem("chats")) || [];
-let filterList = [];
-let index = null;
+let chatList = [
+    { id: 1, type: "chat", image: "https://avatars.mds.yandex.net/get-kinopoisk-image/10768063/0b3b2109-f8ad-4fc9-aa56-fb51a9454bf5/1920x", name: "Иван",
+     text: "Привет, как дела?", time: "15:30", messages: 1},
+    { id: 2, type: "chat", image: "https://avatars.mds.yandex.net/i?id=0b13cc249e10179265de085cd992d165662f9391-6950859-images-thumbs&n=13", name: "Мария",
+    text: "Давай встретимся завтра😊", time: "15:30", messages: 2},
+{
+    id: 3, type: "channel", image: "https://avatars.mds.yandex.net/i?id=286c3aa89816456cdc0f7dca252f094601e0c7fa23b7166d-12726868-images-thumbs&n=13", name: "Новости IT",
+        text: "Apple предоставила новый AirPodsPro", time: "14:45", messages: 5
+    },
+    {
+        id: 4, type: "bot", image: "https://logos.telegram-store.com/bots/worldweatherappbot/telegram_bot_logo.jpg", name: "Weather Bot",
+        text: "Погода в твоем городе +22°С", time: "14:10",
+    }
+]
 
-function saveToLcalStorage(list) {
-    localStorage.setItem("chats", JSON.stringify(list));
-}
+let searchList = [];
+let filteredList = [];
+let current = "all";
 
-createBtn.addEventListener("click", () => {
-    if (createInput.value.trim()) {
-        if(createInput.value.length > 20) {
-            createInput.value = "";
-            return alert("Название чата не должно превышать 20 символов");
-        }
-
-        const newChat = {
-            id: Date.now(),
-            text: createInput.value,
-        }
-
-        chatsList.push(newChat);
-        createInput.value = "";
-        saveToLcalStorage(chatsList);
-        render();
+input.addEventListener("input", (e) => {
+    if(e.target.value.trim()) {
+        
     }
 })
 
@@ -44,10 +44,28 @@ searchInput.addEventListener("input", (e) => {
 })
 
 function renderAndRenderFiltered(searchValue) {
-    filterList = chatsList.filter(chat => chat.text.toLowerCase().includes(searchValue.toLowerCase()))
+    searchList = chatList.filter(v => v.name.toLowerCase().includes(searchValue.toLowerCase()));
 
-    renderFiltered();
+    renderedFilter();
 }
+
+sectionsNavigation.addEventListener("click", (e) => {
+    if (e.target.classList.contains("navigation_list--items")) {
+        sectionsList.forEach(v => v.classList.remove("active"));
+
+        e.target.classList.add("active");
+
+        if(e.target.dataset.filter === "all") {
+            current = "all"
+        } else if(e.target.dataset.filter === "channel") {
+            current = "channel"
+        } else if(e.target.dataset.filter === "bot") {
+            current = "bot"
+        }
+
+        render();
+    }
+})
 
 headerBtn.addEventListener("click", (e) => {
     header.classList.remove("header-visible");
@@ -57,67 +75,92 @@ headerBtn.addEventListener("click", (e) => {
 })
 
 containerChats.addEventListener("click", (e) => {
-    if(e.target.classList.contains("chat")) {
-        document.querySelectorAll(".chat").forEach(chat => {
-            chat.classList.remove("active")
-        })
+    const chatEl = e.target.closest(".container_chats--chat");
+    if(!chatEl) return;
 
-        e.target.classList.add("active");
-        header.classList.add("header-visible");
-        footer.classList.add("footer-visible");
-        sidebar.classList.add("sidebar-hidden");
-        navigation.classList.add("navigation-visible");
+    const chat = chatList.find(c => c.id === +chatEl.dataset.id)
+    sectionsList.forEach(v => v.classList.remove("active"));
 
-        name.textContent = e.target.querySelector("p").textContent;
+    chatEl.classList.add("active");
 
-        index = e.target.id
-    }
+    name.textContent = chat.name;
 
-    if(e.target.classList.contains("remove-btn")) {
-        const id = Number(e.target.dataset.id);
-        chatsList = chatsList.filter(c => c.id !== id);
+    header.classList.add("header-visible");
+    footer.classList.add("footer-visible");
+    sidebar.classList.add("sidebar-hidden");
+    navigation.classList.add("navigation-visible");
+})
 
-        saveToLcalStorage(chatsList);
-        render();
-    }
-}) 
-
-function renderFiltered() {
+function renderedFilter() {
     containerChats.innerHTML = "";
-    filterList.forEach((chat) => {
+
+    filteredList = searchList;
+
+    if (current === "channel") {
+        filteredList = searchList.filter(v => v.type === "channel")
+    }
+
+    if (current === "bot") {
+        filteredList = searchList.filter(v => v.type === "bot")
+    }
+
+    filteredList.forEach(chat => {
         const chatElement = document.createElement("div");
-        chatElement.classList.add("chat");
+        chatElement.classList.add("container_chats--chat");
+        chatElement.dataset.id = chat.id;
+        chatElement.dataset.type = chat.type;
 
-        const chatText = document.createElement("p");
-        chatText.textContent = chat.text;
+        chatElement.innerHTML = `
+        <img src="${chat.image}" class="chat_photo"  alt="Фото человека">
 
-        const removeBtn = document.createElement("button");
-        removeBtn.classList.add("remove-btn");
-        removeBtn.dataset.id = chat.id;
-        removeBtn.textContent = "X";
+        <div class="chat_content">
+         <h3 class="chat_content--title">${chat.name}</h3>
+         <p class="chat_content--text">${chat.text}</p>
+        </div>
 
-        chatElement.append(chatText);
-        chatElement.append(removeBtn);
+        <div class="chat_time">
+         <span class="chat_time--time">${chat.time}</span>
+         ${chat.messages ? `<p class="chat_time--messages">${chat.messages}</p>` : ""}
+        </div>
+        `
+
         containerChats.append(chatElement);
     })
 }
 
 function render() {
     containerChats.innerHTML = "";
-    chatsList.forEach((chat) => {
+
+    filteredList = chatList;
+
+    if(current === "channel") {
+        filteredList = chatList.filter(v => v.type === "channel")
+    }
+
+    if(current === "bot") {
+        filteredList = chatList.filter(v => v.type === "bot")
+    }
+
+    filteredList.forEach(chat => {
         const chatElement = document.createElement("div");
-        chatElement.classList.add("chat");
+        chatElement.classList.add("container_chats--chat");
+        chatElement.dataset.id = chat.id;
+        chatElement.dataset.type = chat.type;
 
-        const chatText = document.createElement("p");
-        chatText.textContent = chat.text;
+        chatElement.innerHTML = `
+        <img src="${chat.image}" class="chat_photo"  alt="Фото человека">
 
-        const removeBtn = document.createElement("button");
-        removeBtn.classList.add("remove-btn");
-        removeBtn.dataset.id = chat.id;
-        removeBtn.textContent = "X";
-        
-        chatElement.append(chatText);
-        chatElement.append(removeBtn);
+        <div class="chat_content">
+         <h3 class="chat_content--title">${chat.name}</h3>
+         <p class="chat_content--text">${chat.text}</p>
+        </div>
+
+        <div class="chat_time">
+         <span class="chat_time--time">${chat.time}</span>
+         ${chat.messages ? `<p class="chat_time--messages">${chat.messages}</p>` : ""}
+        </div>
+        `
+
         containerChats.append(chatElement);
     })
 }
