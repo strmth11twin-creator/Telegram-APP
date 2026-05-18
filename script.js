@@ -8,18 +8,23 @@ const sidebar = document.querySelector("[data-sidebar]");
 const navigation = document.querySelector("[data-navigation]");
 const headerBtn = document.querySelector("[data-header-btn]");
 const removeBtn = document.querySelector("[data-remove-btn]");
-const sectionsList = document.querySelectorAll(".navigation_list--items"); 
+const sectionsList = document.querySelectorAll(".navigation_list--items");
 const sectionsNavigation = document.querySelector("[data-sections-navigation]");
 const input = document.querySelector("[data-input]");
+const telegramBtn = document.querySelector("[data-telegram-btn]");
 
 let chatList = [
-    { id: 1, type: "chat", image: "https://avatars.mds.yandex.net/get-kinopoisk-image/10768063/0b3b2109-f8ad-4fc9-aa56-fb51a9454bf5/1920x", name: "Иван",
-     text: "Привет, как дела?", time: "15:30", messages: 1},
-    { id: 2, type: "chat", image: "https://avatars.mds.yandex.net/i?id=0b13cc249e10179265de085cd992d165662f9391-6950859-images-thumbs&n=13", name: "Мария",
-    text: "Давай встретимся завтра😊", time: "15:30", messages: 2},
-{
-    id: 3, type: "channel", image: "https://avatars.mds.yandex.net/i?id=286c3aa89816456cdc0f7dca252f094601e0c7fa23b7166d-12726868-images-thumbs&n=13", name: "Новости IT",
-        text: "Apple предоставила новый AirPodsPro", time: "14:45", messages: 5
+    {
+        id: 1, type: "chat", image: "https://avatars.mds.yandex.net/get-kinopoisk-image/10768063/0b3b2109-f8ad-4fc9-aa56-fb51a9454bf5/1920x", name: "Иван",
+        text: "Привет, как дела?", time: "15:30", messages: 1
+    },
+    {
+        id: 2, type: "chat", image: "https://avatars.mds.yandex.net/i?id=0b13cc249e10179265de085cd992d165662f9391-6950859-images-thumbs&n=13", name: "Мария",
+        text: "Давай встретимся завтра😊", time: "15:30", messages: 1
+    },
+    {
+        id: 3, type: "channel", image: "https://avatars.mds.yandex.net/i?id=286c3aa89816456cdc0f7dca252f094601e0c7fa23b7166d-12726868-images-thumbs&n=13", name: "Новости IT",
+        text: "Apple предоставила новый AirPodsPro", time: "14:45", messages: 1
     },
     {
         id: 4, type: "bot", image: "https://logos.telegram-store.com/bots/worldweatherappbot/telegram_bot_logo.jpg", name: "Weather Bot",
@@ -32,8 +37,10 @@ let filteredList = [];
 let current = "all";
 
 input.addEventListener("input", (e) => {
-    if(e.target.value.trim()) {
-        
+    if (e.target.value.trim()) {
+        telegramBtn.innerHTML = `<svg class="icons"><use href="icon.svg"></use></svg>`
+    } else {
+        telegramBtn.innerHTML = `<svg class="icons"><use href="icon-icons (5).svg"></use></svg>`
     }
 })
 
@@ -55,11 +62,11 @@ sectionsNavigation.addEventListener("click", (e) => {
 
         e.target.classList.add("active");
 
-        if(e.target.dataset.filter === "all") {
+        if (e.target.dataset.filter === "all") {
             current = "all"
-        } else if(e.target.dataset.filter === "channel") {
+        } else if (e.target.dataset.filter === "channel") {
             current = "channel"
-        } else if(e.target.dataset.filter === "bot") {
+        } else if (e.target.dataset.filter === "bot") {
             current = "bot"
         }
 
@@ -76,7 +83,7 @@ headerBtn.addEventListener("click", (e) => {
 
 containerChats.addEventListener("click", (e) => {
     const chatEl = e.target.closest(".container_chats--chat");
-    if(!chatEl) return;
+    if (!chatEl) return;
 
     const chat = chatList.find(c => c.id === +chatEl.dataset.id)
     sectionsList.forEach(v => v.classList.remove("active"));
@@ -133,11 +140,11 @@ function render() {
 
     filteredList = chatList;
 
-    if(current === "channel") {
+    if (current === "channel") {
         filteredList = chatList.filter(v => v.type === "channel")
     }
 
-    if(current === "bot") {
+    if (current === "bot") {
         filteredList = chatList.filter(v => v.type === "bot")
     }
 

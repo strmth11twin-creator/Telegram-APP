@@ -43,6 +43,12 @@
     outline: none;
 }
 
+.telegramBtn {
+    background-color: unset;
+    border: none;
+    
+}
+
 @media (max-width: 768px) {
     .footer {
         display: none;
