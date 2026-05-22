@@ -11,6 +11,7 @@
     background-color: var(--input-bg);
     padding: 20px;
     border-radius: 10px;
+
 }
 
 .modal-label {
@@ -33,9 +34,11 @@
     gap: 15px;
     max-width: 500px;
     width: 100%;
-    position: fixed;
-    top: 40%;
-    left: 40%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
 }
 
 .modal-btn {
@@ -49,4 +52,16 @@
 
 .modal-btn:hover {
     outline: 1px solid #fff;
+}
+
+@media (max-width: 576px) {
+    .modal {
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal {
+        max-width: 300px;
+    }
 }
