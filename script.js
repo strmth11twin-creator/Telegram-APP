@@ -14,7 +14,11 @@ const input = document.querySelector("[data-input]");
 const telegramBtn = document.querySelector("[data-telegram-btn]");
 const containerMessages = document.querySelector("[data-container-messages]");
 const file = document.querySelector("[data-file]");
-const fileInput = document.querySelector("[data-file-input]")
+const fileInput = document.querySelector("[data-file-input]");
+const modal = document.querySelector("[data-modal]");
+const grid = document.querySelector(".container");
+const modalInput = document.querySelector("[data-modal-input]");
+const modalBtn = document.querySelector("[data-modal-btn]");
 
 let chatList = [
     {
@@ -67,11 +71,16 @@ fileInput.addEventListener("change", (e) => {
 telegramBtn.addEventListener("click", () => {
     if (input.value.trim()) {
 
+        const newTodo = {
+            text: input.value,
+            id: Date.now()
+        }
+
         if(!messages[currentChatId]) {
             messages[currentChatId] = [];
         }
 
-        messages[currentChatId].push(input.value);
+        messages[currentChatId].push(newTodo);
 
         input.value = "";
 
@@ -131,6 +140,7 @@ sectionsNavigation.addEventListener("click", (e) => {
 })
 
 headerBtn.addEventListener("click", (e) => {
+    containerMessages.classList.remove("container-messages-visible")
     header.classList.remove("header-visible");
     footer.classList.remove("footer-visible");
     sidebar.classList.remove("sidebar-hidden");
@@ -156,6 +166,38 @@ containerChats.addEventListener("click", (e) => {
     navigation.classList.add("navigation-visible");
 
     renderMessages();
+})
+
+
+containerMessages.addEventListener("dblclick", (e) => {
+    if (!e.target.classList.contains("message")) return;
+
+    const id = Number(e.target.closest("[data-id]").dataset.id);
+
+    const obj = messages[currentChatId].find(v => v.id === id);
+
+    modal.classList.add("modal-show");
+    grid.classList.add("container-blur");
+
+    modalInput.value = e.target.textContent;
+    modalInput.focus();
+
+    modalBtn.addEventListener("click", () => {
+        e.target.textContent = modalInput.value;
+
+        modal.classList.remove("modal-show");
+        grid.classList.remove("container-blur");
+
+        obj.text = modalInput.value;
+
+        saveToLocalStorage(messages);
+    },{once: true})
+})
+
+modalInput.addEventListener("keydown", (e) => {
+    if(e.key === "Enter") {
+        modalBtn.click();
+    }
 })
 
 function renderedFilter() {
@@ -238,10 +280,15 @@ function renderMessages() {
     const chatMessages = messages[currentChatId] || [];
 
     chatMessages.forEach(message => {
-        const messageElement = document.createElement("span");
-        messageElement.textContent = message;
+        const messageElement = document.createElement("div");
         messageElement.classList.add("message-text");
+        messageElement.dataset.id = message.id;
 
+        const element = document.createElement("span");
+        element.textContent = message.text;
+        element.classList.add("message")
+
+        messageElement.append(element);
         containerMessages.append(messageElement);
     })
 }

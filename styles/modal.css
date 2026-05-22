@@ -1,0 +1,52 @@
+.modal {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    width: 100%;
+    position: fixed;
+    top: 30%;
+    left: 30%;
+    display: none;
+    background-color: var(--input-bg);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.modal-label {
+    color: #fff;
+}
+
+.modal-input {
+    height: 40px;
+    padding: 0 10px;
+    background: var(--main-bg-color-chats);
+    border-radius: 5px;
+    color: #fff;
+    border: none;
+}
+
+.modal-show {
+    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    width: 100%;
+    position: fixed;
+    top: 40%;
+    left: 40%;
+}
+
+.modal-btn {
+    height: 40px;
+    background-color: #58a7e7;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.modal-btn:hover {
+    outline: 1px solid #fff;
+}
